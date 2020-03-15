@@ -1,9 +1,8 @@
 import React from "react";
 import "./App.css";
-import "antd/dist/antd.css";
-import { Typography, List, Form, Input, Button } from "antd";
 import ApolloClient, { gql } from "apollo-boost";
 import { ApolloProvider, useQuery, useMutation } from "@apollo/react-hooks";
+import Button from '@material-ui/core/Button';
 
 const graphqlEndpoint =
   process.env.REACT_APP_GRAPHQL_ENDPOINT ?? "http://localhost:8000/graphql";
@@ -22,6 +21,7 @@ const ALL_POSTS = gql`
   }
 `;
 
+/*
 function PostList() {
   const { loading, error, data } = useQuery(ALL_POSTS);
   if (loading) {
@@ -41,6 +41,7 @@ function PostList() {
     />
   );
 }
+*/
 
 const ADD_POST = gql`
   mutation AddPost($input: PostInput!) {
@@ -50,6 +51,7 @@ const ADD_POST = gql`
   }
 `;
 
+/*
 function AddPostForm() {
   const [addPost] = useMutation(ADD_POST, {
     refetchQueries: [{ query: ALL_POSTS }]
@@ -87,13 +89,15 @@ function AddPostForm() {
     </Form>
   );
 }
+*/
 
 function App() {
   return (
     <ApolloProvider client={client}>
       <div className="App">
-        <PostList />
-        <AddPostForm />
+        <Button variant="contained" color="primary">
+          Hello world
+        </Button>
       </div>
     </ApolloProvider>
   );
