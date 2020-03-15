@@ -1,29 +1,34 @@
 import React from "react";
 import "./App.css";
 import ApolloClient, { gql } from "apollo-boost";
-import { ApolloProvider, useQuery, useMutation } from "@apollo/react-hooks";
+import { ApolloProvider, useQuery, useMutation, useApolloClient } from "@apollo/react-hooks";
 import Button from '@material-ui/core/Button';
+import { ApolloCache } from 'apollo-cache';
 
 const graphqlEndpoint =
   process.env.REACT_APP_GRAPHQL_ENDPOINT ?? "http://localhost:8000/graphql";
+
 const client = new ApolloClient({
   uri: graphqlEndpoint
 });
 
-// https://medium.com/@ss_81611/ant-design-the-best-react-ui-library-ive-ever-used-3e0a48ab24c3
-
-const ALL_POSTS = gql`
+const ROOT_POSTS = gql`
   {
-    allPosts {
+    rootPosts {
       id
       body
+      parentId
+      flatChildren(nestingLevel: 2) {
+        id
+        parentId
+        body
+      }
     }
   }
 `;
 
-/*
 function PostList() {
-  const { loading, error, data } = useQuery(ALL_POSTS);
+  const { loading, error, data } = useQuery(ROOT_POSTS);
   if (loading) {
     return null;
   }
@@ -31,17 +36,19 @@ function PostList() {
     return <div>There was an error: {error.message}</div>;
   }
 
-  console.log("all posts are", data.allPosts);
+  console.log("all posts are", data.rootPosts);
   return (
-    <List
-      header={<div>All Posts</div>}
-      bordered
-      dataSource={data.allPosts}
-      renderItem={(post: any) => <List.Item>{post.body}</List.Item>}
-    />
+    <div>
+      hihiii
+      <br />
+      {data.rootPosts.map((post: any, i: number) => (
+        <div>
+          {post.body}
+        </div>
+      ))}
+    </div>
   );
 }
-*/
 
 const ADD_POST = gql`
   mutation AddPost($input: PostInput!) {
@@ -98,6 +105,7 @@ function App() {
         <Button variant="contained" color="primary">
           Hello world
         </Button>
+        <PostList />
       </div>
     </ApolloProvider>
   );
